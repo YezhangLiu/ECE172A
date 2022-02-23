@@ -17,7 +17,7 @@ import heapq
 # initialize parameters
 height = 50; # map height
 width = 50 # map width
-num_bots = 1 # number of bots
+num_bots = 15 # number of bots
 max_itr = 2500 # maximum number of iterations
 
 wall = 1 # value for a wall in the map matrix
@@ -61,7 +61,13 @@ def get_unexplored_areas(explore_map, unmapped_value):
     unexplored areas in this case. If there are no unexplored areas, then
     unexplored_areas should return empty [].
     '''
-    return 0
+    unexplored_areas = []
+    for i in range(len(explore_map)):
+        for j in range(len(explore_map[i])):
+            if explore_map[i][j] == unmapped_value:
+                unexplored_areas.append([i,j])
+    
+    return unexplored_areas
 
 def get_new_destination(current_position, unexplored_areas):
     '''
@@ -71,8 +77,11 @@ def get_new_destination(current_position, unexplored_areas):
     we define "closest" using the euclidean distance measure,
     e.g. sqrt((x1-x2)^2 + (y1-y2)^2).
     '''
-
-    return 0
+    dist = []
+    for location in unexplored_areas:
+        dist.append(heuristic(current_position, location))
+    i = dist.index(min(dist))
+    return unexplored_areas[i]
 
 
 def update_explore_map(dest, route, explore_map, planned, unmapped):
@@ -81,6 +90,12 @@ def update_explore_map(dest, route, explore_map, planned, unmapped):
     are marked as PLANNED only if it was previous UNMAPPED in the explore_map
     variable.
     '''
+    if explore_map[dest[0]][dest[1]] == unmapped:
+        explore_map[dest[0]][dest[1]] = planned
+    
+    for i in route:
+        if explore_map[i[0]][i[1]] == unmapped:
+            explore_map[i[0]][i[1]] = planned
 
     return explore_map
 
@@ -95,7 +110,12 @@ def update_position(curPos, route, dest, explore_map, mapped):
        updated to e.g. if route was inputted as an Nx2 matrix, it should
        output as a (N-1)x2 matrix.
     '''
+    curPos = route[1]
+    explore_map[curPos[0],curPos[1]] = mapped
+    if curPos[0] == dest[0] and curPos[1] == dest[1]:
+        dest = []
 
+    route = np.delete(route, (0), axis=0)
     return curPos, route, dest, explore_map
 
 def update_bot_info(curPos, dest, route, explore_map, botNum):
@@ -162,7 +182,7 @@ def a_star(array, start, goal):
                 heapq.heappush(oheap, (fscore[neighbor], neighbor))
  
     return False
-
+img_artist = plt.imshow(explore_map,cmap='gray')
 for itr in range(max_itr):
     for botNum in range(num_bots):
         # extract bot's info for convenience/code readability
@@ -204,7 +224,7 @@ for itr in range(max_itr):
         update_bot_info(curPos, dest, route, explore_map, botNum)
 
     # update display
-    plt.imshow(explore_map, cmap='gray')
+    img_artist.set_data(explore_map)
     for i in range(num_bots):
         fig = plt.gcf()
         ax = fig.gca()
@@ -214,11 +234,12 @@ for itr in range(max_itr):
             plt.plot(bots[i]['destination'][1], bots[i]['destination'][0], color='yellow')
 
     plt.show(block=False)
-    plt.pause(.25)
+    plt.pause(.05)
     ax.patches = []
     mapped_count = sum(sum(np.array(explore_map) == mapped))
     wall_count = sum(sum(np.array(explore_map) == wall))
     explore_size = explore_map.size
+
     if (mapped_count + wall_count) == explore_size:
         break
 
