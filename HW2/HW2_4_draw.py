@@ -6,6 +6,7 @@ For use by UCSD ECE 172A students only.
 '''
 
 import matplotlib.pyplot as plt 
+import pickle
 import numpy as np
 
 def draw_path(final_path_points, other_path_points):
@@ -36,4 +37,4 @@ def draw_path(final_path_points, other_path_points):
 	plt.show()
 
 ### Your Work Below: 
-
+favorite_color = pickle.load( open( "save.p", "rb" ) )
