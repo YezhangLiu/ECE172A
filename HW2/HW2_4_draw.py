@@ -8,6 +8,7 @@ For use by UCSD ECE 172A students only.
 import matplotlib.pyplot as plt 
 import pickle
 import numpy as np
+from sklearn import neighbors
 
 def draw_path(final_path_points, other_path_points):
 	'''
@@ -37,4 +38,88 @@ def draw_path(final_path_points, other_path_points):
 	plt.show()
 
 ### Your Work Below: 
-favorite_color = pickle.load( open( "save.p", "rb" ) )
+maze = pickle.load( open( "172maze2021.p", "rb" ) )
+#print(maze[1,1])
+#print(maze.keys()) #[0,0] [0,1] ...
+#print(maze.values()) #[t f f f ], [t t f f] ... [N, E, S, W]
+# [1,1] center, N = [1,2] E = [2,1] S = [1,0] W = [0,1]
+# turn pickle to adjacency list
+adj_list = {}
+keys_list = list(maze)
+value_list = list(maze.values())
+#print(len(keys_list),len(value_list))
+#print(value_list[0][3])
+for i in range(len(keys_list)):
+	adjacent = []
+	if value_list[i][0] == True:
+		adjacent.append(tuple([keys_list[i][0],keys_list[i][1]+1]))
+	if value_list[i][1] == True:
+		adjacent.append(tuple([keys_list[i][0]+1,keys_list[i][1]]))
+	if value_list[i][2] == True:
+		adjacent.append(tuple([keys_list[i][0],keys_list[i][1]-1]))
+	if value_list[i][3] == True:
+		adjacent.append(tuple([keys_list[i][0]-1,keys_list[i][1]]))
+	
+	adj_list[keys_list[i]] = adjacent
+
+def getIndex(location):
+	index = 0
+	for i in range(len(keys_list)):
+		if location == keys_list[i]
+			index = i
+	return index
+'''
+def DFS(adj_list):
+	#current index
+	i = 0
+	keys_list = list(adj_list)
+	# neightbors
+	value_list = list(adj_list.values())
+	stack = []
+	# visited = 1, not visited = 0
+	visited = np.zeros(len(adj_list))
+	parents = np.zeros(len(adj_list))
+	# append start location
+	stack.append(keys_list[i])
+	while stack:
+		fst_node = stack.pop()
+		if(visited[i] == 0):
+			visited[i] = 1
+			neighbors = value_list[i]
+			for j in len(neighbors):
+				index(neighbors[j])
+				if neighbors[j] =
+	print(adj_list[value_list[0][0]])
+
+
+	return 0
+'''
+def iterativeDFS(graph, v, discovered):
+ 
+    # create a stack used to do iterative DFS
+    stack = []
+ 
+    # push the source node into the stack
+    stack.append(v)
+ 
+    # loop till stack is empty
+    while stack:
+ 
+        # Pop a vertex from the stack
+        v = stack.pop()
+ 
+        # if the vertex is already discovered yet, ignore it
+        if discovered[v]:
+            continue
+ 
+        # we will reach here if the popped vertex `v` is not discovered yet;
+        # print `v` and process its undiscovered adjacent nodes into the stack
+        discovered[v] = True
+        print(v, end=' ')
+ 
+        # do for every edge (v, u)
+        adjList = graph.adjList[v]
+        for i in reversed(range(len(adjList))):
+            u = adjList[i]
+            if not discovered[u]:
+                stack.append(u)
