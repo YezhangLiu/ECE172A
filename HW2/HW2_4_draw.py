@@ -62,14 +62,17 @@ for i in range(len(keys_list)):
 	
 	adj_list[keys_list[i]] = adjacent
 
+# get the index of current location in range 0 - 2499
 def getIndex(location):
 	index = 0
 	for i in range(len(keys_list)):
 		if location == keys_list[i]:
 			index = i
 	return index
-'''
+
 def DFS(adj_list):
+	all_path = []
+	final_path = []
 	#current index
 	i = 0
 	keys_list = list(adj_list)
@@ -81,45 +84,27 @@ def DFS(adj_list):
 	parents = np.zeros(len(adj_list))
 	# append start location
 	stack.append(keys_list[i])
-	while stack:
-		fst_node = stack.pop()
+
+	while stack and i != 2499:
+		removed = stack.pop()
+		i = getIndex(removed)
+		all_path.append(removed)
 		if(visited[i] == 0):
 			visited[i] = 1
-			neighbors = value_list[i]
-			for j in len(neighbors):
-				index(neighbors[j])
-				if neighbors[j] =
-	print(adj_list[value_list[0][0]])
+		neighbors = value_list[i]
+		for j in range(len(neighbors)):
+			index = getIndex(neighbors[j])
+			if visited[index] == 0:
+				stack.append(neighbors[j])
+				parents[index] = i
+	k = 2499
+	parents.astype(np.int64)
+	while k != 0:
+		final_path.append(keys_list[k])
+		k = int(parents[k])
 
+	all_path = []
+	return all_path, final_path
 
-	return 0
-'''
-def iterativeDFS(graph, v, discovered):
- 
-    # create a stack used to do iterative DFS
-    stack = []
- 
-    # push the source node into the stack
-    stack.append(v)
- 
-    # loop till stack is empty
-    while stack:
- 
-        # Pop a vertex from the stack
-        v = stack.pop()
- 
-        # if the vertex is already discovered yet, ignore it
-        if discovered[v]:
-            continue
- 
-        # we will reach here if the popped vertex `v` is not discovered yet;
-        # print `v` and process its undiscovered adjacent nodes into the stack
-        discovered[v] = True
-        print(v, end=' ')
- 
-        # do for every edge (v, u)
-        adjList = graph.adjList[v]
-        for i in reversed(range(len(adjList))):
-            u = adjList[i]
-            if not discovered[u]:
-                stack.append(u)
+all_path, final_path = DFS(adj_list)
+draw_path(all_path, final_path)
