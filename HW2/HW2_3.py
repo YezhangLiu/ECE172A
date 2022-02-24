@@ -13,8 +13,8 @@ def forwardKinematics(theta0, theta1, theta2, l0, l1, l2):
     y_1 = np.sin(theta0) * l0
     x_2 = np.cos(theta1) * l1 + x_1
     y_2 = np.sin(theta1) * l1 + y_1
-    x_e = np.cos(theta2) * l2 + x_2
-    y_e = np.sin(theta2) * l2 + y_2
+    x_e = np.sin(theta2) * l2 + x_2
+    y_e = np.cos(theta2) * l2 + y_2
     return x_1,y_1,x_2,y_2,x_e,y_e
 
 def inverseKinematics(l0,l1,l2,x_e_target,y_e_target):
@@ -85,10 +85,10 @@ def inverseKinematics(l0,l1,l2,x_e_target,y_e_target):
     return theta0, theta1, theta2
     
 def Jacob(theta0, theta1, theta2, l0, l1, l2):
-    #x_e = np.cos(theta2) * l2 + np.cos(theta1) * l1 + np.cos(theta0) * l0
-    #y_e = np.sin(theta2) * l2 + np.sin(theta1) * l1 + np.sin(theta0) * l0
-    Jmatrix = np.array([[-np.sin(theta0) * l0, -np.sin(theta1) * l1, -np.sin(theta2) * l2], \
-                [np.cos(theta0)*l0, np.cos(theta1)*l1, np.cos(theta2)*l2]])
+    #x_e = np.sin(theta2) * l2 + np.cos(theta1) * l1 + np.cos(theta0) * l0
+    #y_e = np.cos(theta2) * l2 + np.sin(theta1) * l1 + np.sin(theta0) * l0
+    Jmatrix = np.array([[-np.sin(theta0) * l0, -np.sin(theta1) * l1, np.cos(theta2) * l2], \
+                [np.cos(theta0)*l0, np.cos(theta1)*l1, -np.sin(theta2)*l2]])
     return Jmatrix
 
 def drawRobot2(x_1,y_1,x_2,y_2,x_e,y_e):
