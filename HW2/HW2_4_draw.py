@@ -75,6 +75,7 @@ def DFS(adj_list):
 	final_path = []
 	#current index
 	i = 0
+	iteration_counter = 0
 	keys_list = list(adj_list)
 	# neightbors
 	value_list = list(adj_list.values())
@@ -86,6 +87,7 @@ def DFS(adj_list):
 	stack.append(keys_list[i])
 
 	while stack and i != 2499:
+		iteration_counter += 1
 		removed = stack.pop()
 		i = getIndex(removed)
 		all_path.append(removed)
@@ -103,8 +105,50 @@ def DFS(adj_list):
 		final_path.append(keys_list[k])
 		k = int(parents[k])
 
-	all_path = []
+	print("iteration", iteration_counter)
 	return all_path, final_path
 
-all_path, final_path = DFS(adj_list)
+
+def BFS(adj_list):
+	all_path = []
+	final_path = []
+	#current index
+	i = 0
+	iteration_counter = 0
+	keys_list = list(adj_list)
+	# neightbors
+	value_list = list(adj_list.values())
+	queue = []
+	# visited = 1, not visited = 0
+	visited = np.zeros(len(adj_list))
+	parents = np.zeros(len(adj_list))
+	# append start location
+	queue.append(keys_list[i])
+	visited[i] = 1
+	while queue and i != 2499:
+		iteration_counter += 1
+		removed = queue.pop(0)
+		i = getIndex(removed)
+		all_path.append(removed)
+
+		neighbors = value_list[i]
+		for j in range(len(neighbors)):
+			index = getIndex(neighbors[j])
+			if visited[index] == 0:
+				queue.append(neighbors[j])
+				visited[index] = 1
+				parents[index] = i
+	k = 2499
+	parents.astype(np.int64)
+	while k != 0:
+		final_path.append(keys_list[k])
+		k = int(parents[k])
+
+	print("iteration", iteration_counter)
+	return all_path, final_path
+
+#all_path, final_path = DFS(adj_list)
+all_path, final_path = BFS(adj_list)
+# comment out this line to see all visited nodes
+all_path = []
 draw_path(all_path, final_path)
