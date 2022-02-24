@@ -65,7 +65,7 @@ for i in range(len(keys_list)):
 def getIndex(location):
 	index = 0
 	for i in range(len(keys_list)):
-		if location == keys_list[i]
+		if location == keys_list[i]:
 			index = i
 	return index
 '''
